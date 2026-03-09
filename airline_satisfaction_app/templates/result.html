@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .satisfied {
+            background: #d4edda;
+            border: 3px solid #28a745;
+        }
+
+        .dissatisfied {
+            background: #f8d7da;
+            border: 3px solid #dc3545;
+        }
+
+        .prediction-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .prediction-text {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .confidence {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+        }
+
+        .factors-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .factors-card h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .factors-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .factors-list li {
+            background: white;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-size: 18px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .summary-card {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .summary-card h3 {
+            color: #0d47a1;
+            margin-bottom: 25px;
+            font-size: 22px;
+            border-bottom: 3px solid #0d47a1;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .summary-item strong {
+            color: #0d47a1;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .summary-item span {
+            color: #495057;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-back {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 45px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Prediction Result</h1>
+        </div>
+        
+        <div class="content">
+            <!-- Prediction Result Card -->
+            <div class="result-card {% if prediction == 1 %}satisfied{% else %}dissatisfied{% endif %}">
+                <div class="prediction-icon">
+                    {% if prediction == 1 %}
+                        ✅
+                    {% else %}
+                        ❌
+                    {% endif %}
+                </div>
+                
+                <div class="prediction-text">
+                    {% if prediction == 1 %}
+                        SATISFIED
+                    {% else %}
+                        DISSATISFIED
+                    {% endif %}
+                </div>
+                
+                <div class="confidence">
+                    Confidence: {{ "%.1f"|format(probability * 100) }}%
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ probability * 100 }}%;"></div>
+                </div>
+            </div>
+            
+            <!-- Key Factors Section -->
+            {% if top_factors %}
+            <div class="factors-card">
+                <h3>🔑 Key Influencing Factors</h3>
+                <ul class="factors-list">
+                    {% for factor in top_factors %}
+                        <li>✨ {{ factor }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- Passenger Summary Section -->
+            <div class="summary-card">
+                <h3>📋 Passenger Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <strong>Age</strong>
+                        <span>{{ input_data.age }} years</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Gender</strong>
+                        <span>{{ input_data.gender }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Customer Type</strong>
+                        <span>{{ input_data.customer_type }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Travel Type</strong>
+                        <span>{{ input_data.type_of_travel }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Class</strong>
+                        <span>{{ input_data.class }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Flight Distance</strong>
+                        <span>{{ input_data.flight_distance }} miles</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Total Delay</strong>
+                        <span>{{ input_data.departure_delay_in_minutes + input_data.arrival_delay_in_minutes }} min</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <strong>Avg Service Rating</strong>
+                        <span>{{ "%.1f"|format((input_data.inflight_wifi_service + input_data.food_and_drink + input_data.seat_comfort + input_data.inflight_entertainment) / 4) }}/5</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back Button -->
+            <div class="btn-container">
+                <a href="/" class="btn-back">🔄 Try Another Passenger</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
