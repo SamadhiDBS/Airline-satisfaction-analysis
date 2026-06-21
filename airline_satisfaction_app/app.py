@@ -98,7 +98,7 @@ print("🔍 MODEL STATUS:")
 print("="*50)
 if model is not None:
     print("✅ Model is LOADED and READY for predictions")
-    best_accuracy = 0.95  # You can set your actual accuracy here
+    best_accuracy = 0.95 
 else:
     print("⚠️ Model is NOT loaded - using FALLBACK mode (always 95% satisfied)")
     print("   Please check model files in the 'models' folder")
@@ -170,7 +170,7 @@ def predict():
                             print(f"   Encoded {col}: {original_value} → {encoded_value}")
                         except Exception as e:
                             print(f"   ⚠️ Could not encode {col}: {e}")
-                            df_input[col] = 0  # Default value
+                            df_input[col] = 0  
             
             # Ensure all feature columns exist
             if feature_names:
@@ -200,10 +200,10 @@ def predict():
                     # probabilities[1] = probability of satisfied (class 1)
                     
                     if prediction == 1:
-                        probability = probabilities[1]  # Satisfied confidence
+                        probability = probabilities[1]  
                         result = "SATISFIED"
                     else:
-                        probability = probabilities[0]  # Dissatisfied confidence
+                        probability = probabilities[0]  
                         result = "DISSATISFIED"
                     
                     print(f"   ✅ REAL PREDICTION: {result}")
